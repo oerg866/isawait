@@ -1,0 +1,23 @@
+
+.AUTODEPEND
+
+#          *Translator Definitions*
+MODEL = s
+
+CC = TCC
+LINK = tlink
+LIBPATH = C:\TC\LIB
+LFLAGS= /v/L$(LIBPATH)
+INCLUDEPATH = ..\..\INCLUDE;..\INCLUDE
+
+
+OUTPUT = ISAWAIT.EXE
+
+CFILES = MAIN.C \
+         PCI.C \
+     ISAWAIT.C
+
+LIBS = c0$(MODEL) $(LIBPATH)\c$(MODEL).LIB
+
+$(OUTPUT):
+        $(CC) -e$(OUTPUT) $(CFILES)
