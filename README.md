@@ -3,7 +3,7 @@
 (C) 2022-2023 Eric Voirin (oerg866)
 --
 
-`ISAWAIT` is a MS-DOS program for Intel I430VX based PC motherboards to set the ISA I/O Recovery Timing.
+`ISAWAIT` is a DOS program to change and set the ISA I/O Recovery Timing.
 
 This program exists because some boards, such as **ECS P5VX-Be** have BIOSes which sets this up with an optimistic default and have no option in the BIOS to change this.
 
