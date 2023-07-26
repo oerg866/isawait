@@ -4,60 +4,65 @@
 
 #include <stdio.h>
 #include <dos.h>
+#include <conio.h>
 
 #include "TYPES.H"
 
-#ifndef outportl
+#if !defined(outportb) && defined(_outp)
+	#define outportb _outp
+#endif
+
+#if !defined(outportl)
+
 static u32 inportl(u16 port)
 /* Emulates 32-bit I/O port reads using
    manual prefixed 32-bit instructions */
 {
-    u16 retl, reth;
-    asm {
-    db 0x50                     /* push eax */
-    push bx
-    push dx
-    mov dx, port
-    db 0x66, 0xED               /* in  eax, dx */
-    mov retl, ax
-    db 0x66, 0xC1, 0xE8, 0x10   /* shr eax, 16 */
-    mov reth, ax
-    pop dx
-    pop bx
-    db 0x58                     /* pop eax */
-    }
-    return (u32) retl | ((u32) reth << 16);
+	u16 retl, reth;
+	__asm {
+		db 0x50                     /* push eax */
+		push bx
+		push dx
+		mov dx, port
+		db 0x66, 0xED               /* in  eax, dx */
+		mov retl, ax
+		db 0x66, 0xC1, 0xE8, 0x10   /* shr eax, 16 */
+		mov reth, ax
+		pop dx
+		pop bx
+		db 0x58                     /* pop eax */
+	}
+	return (u32) retl | ((u32) reth << 16);
 }
 
 static void outportl(u16 port, u32 value)
 /* Emulates 32-Bit I/O port writes using
    manual prefixed 32-bit instructions. */
 {
-    u16 vall = (u16) value;
-    u16 valh = (u16) (value >> 16);
+	u16 vall = (u16) value;
+	u16 valh = (u16) (value >> 16);
 
-    asm {
-    db 0x50                     /* push eax */
-    db 0x53                     /* push ebx */
-    push dx
+	__asm {
+		db 0x50                     /* push eax */
+		db 0x53                     /* push ebx */
+		push dx
 
-    mov ax, valh
-    db 0x66, 0xC1, 0xE0, 0x10   /* shl eax, 16 */
-    mov dx, vall
+		mov ax, valh
+		db 0x66, 0xC1, 0xE0, 0x10   /* shl eax, 16 */
+		mov dx, vall
 
-    db 0x66, 0x0F, 0xB7, 0xDA   /* movzx ebx, dx */
-    db 0x66, 0x09, 0xD8         /* or eax, ebx */
+		db 0x66, 0x0F, 0xB7, 0xDA   /* movzx ebx, dx */
+		db 0x66, 0x09, 0xD8         /* or eax, ebx */
 
-    mov dx, port
-    db 0x66, 0xEF               /* out dx, eax */
+		mov dx, port
+		db 0x66, 0xEF               /* out dx, eax */
 
-    pop dx
-    db 0x5B                     /* pop ebx */
-    db 0x58                     /* pop eax */
-    }
+		pop dx
+		db 0x5B                     /* pop ebx */
+		db 0x58                     /* pop eax */
+	}
 }
 #endif
-
 
 u32 pci_read_32(u32 bus, u32 slot, u32 func, u32 offset)
 /* Reads DWORD from PCI config space. Assumes offset is DWORD-aligned. */

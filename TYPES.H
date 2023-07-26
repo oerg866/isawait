@@ -12,6 +12,4 @@ typedef signed   long  i32;
 
 /* Application specific types */
 
-
-
 #endif

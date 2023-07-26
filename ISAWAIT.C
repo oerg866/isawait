@@ -9,14 +9,14 @@
 #include "TYPES.H"
 #include "PCI.H"
 
-typedef struct isawait_dev;
+typedef struct isawait_dev_s;
 
-typedef void (*func_info) (struct isawait_dev *dev);
-typedef void (*func_ir8)  (struct isawait_dev *dev, int value);
-typedef void (*func_ir16) (struct isawait_dev *dev, int value);
+typedef void (*func_info) (struct isawait_dev_s *dev);
+typedef void (*func_ir8)  (struct isawait_dev_s *dev, int value);
+typedef void (*func_ir16) (struct isawait_dev_s *dev, int value);
 
 
-typedef struct {
+typedef struct isawait_dev_s{
     u16       ven;          /* PCI Vendor ID of device */
     u16       dev;          /* PCI Device ID of device */
     u8        variant;      /* Variant of the device, to handle different regs */
@@ -103,11 +103,11 @@ static void ir16_sis(isawait_dev *dev, int value) {
 }
 
 static isawait_dev isawait_devs[] = {
-    { 0x8086, 0x122E, 0x00, "Intel PIIX", info_piix, ir8_piix, ir16_piix },
-    { 0x8086, 0x7000, 0x00, "Intel PIIX3", info_piix, ir8_piix, ir16_piix },
+    { 0x8086, 0x122E, 0x00, "Intel PIIX",     info_piix, ir8_piix, ir16_piix },
+    { 0x8086, 0x7000, 0x00, "Intel PIIX3",    info_piix, ir8_piix, ir16_piix },
     { 0x8086, 0x7110, 0x00, "Intel PIIX4(E)", info_piix, ir8_piix, ir16_piix },
-    { 0x1039, 0x5113, 0x51, "SiS 5113", info_sis, ir8_sis, ir16_sis },
-    { 0x1039, 0x0008, 0x46, "SiS 559x", info_sis, ir8_sis, ir16_sis },
+    { 0x1039, 0x5113, 0x51, "SiS 5113",       info_sis,  ir8_sis,  ir16_sis },
+    { 0x1039, 0x0008, 0x46, "SiS 559x",       info_sis,  ir8_sis,  ir16_sis },
 };
 
 static const int isawait_dev_count = sizeof(isawait_devs) / sizeof(isawait_devs[0]);
@@ -133,7 +133,7 @@ static isawait_dev *isawait_get_device(u8 bus, u8 slot)
 int isawait_set(int iorec8, int iorec16) {
     u16 bus, slot;
     u8 found = 0;
-    ISAWAIT_dev *dev;
+    isawait_dev *dev;
 
     /* Find device */
 

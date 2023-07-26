@@ -36,4 +36,6 @@ typedef union {
     SIS_BITS bits;
 } SIS;
 
+int isawait_set(int iorec8, int iorec16);
+
 #endif

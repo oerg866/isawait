@@ -1,23 +1,17 @@
+CC = wcc
+AS = wasm
+LD = wlink
+CL = wcl
 
-.AUTODEPEND
+CFLAGS = -3 -bt=dos
+LDFLAGS = SYSTEM DOS
 
-#          *Translator Definitions*
-MODEL = s
+OBJ = main.obj pci.obj isawait.obj
 
-CC = TCC
-LINK = tlink
-LIBPATH = C:\TC\LIB
-LFLAGS= /v/L$(LIBPATH)
-INCLUDEPATH = ..\..\INCLUDE;..\INCLUDE
+all : ISAWAIT.EXE
 
+ISAWAIT.EXE : $(OBJ)
+	$(LD) $(LDFLAGS) NAME ISAWAIT.EXE FILE {$(OBJ)}
 
-OUTPUT = ISAWAIT.EXE
-
-CFILES = MAIN.C \
-         PCI.C \
-     ISAWAIT.C
-
-LIBS = c0$(MODEL) $(LIBPATH)\c$(MODEL).LIB
-
-$(OUTPUT):
-        $(CC) -e$(OUTPUT) $(CFILES)
+.c.obj : .AUTODEPEND
+		$(CC) $(CFLAGS) -fo=$@ $<

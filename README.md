@@ -57,14 +57,11 @@ Windows 95 / 98.
 
 ## Building
 
-I wrote this in and compiled it with **Borland Turbo C++ 3.0** .
+- Download and install the OpenWatcom compiler.
+- Change to the repository folder
+- Type `wmake`
 
-Assumiung that the compiler tool chain is in your `PATH`, compile the program like this:
-
-`MAKE`
-
-It is probably buildable with Microsoft C, DJGPP or (Open)Watcom with little to
-no effort.
+That's it!
 
 ### Difficulties when writing ISAWAIT
 
